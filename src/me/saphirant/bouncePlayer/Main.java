@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -55,28 +55,25 @@ public class Main extends JavaPlugin implements Listener{
 		return false;
 	}
 	
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void playerMove(PlayerMoveEvent e){
-		e.setCancelled(false);
+	public void onPlayerDamage(EntityDamageEvent e){
+		Player p = (Player) e.getEntity();
 		if(bounce == true){
-			if(e.getPlayer().isOnGround()){
-
-			
-			float x = (float) -1 + (float) (Math.random() * ((1 - -1) + 1));
-		    float y = (float) -5 + (float)(Math.random() * ((5 - -5) + 1));
-		    float z = (float) -0.3 + (float)(Math.random() * ((0.3 - -0.3) + 1));
-			e.getPlayer().setVelocity(new Vector(x,y,z));
-			e.getPlayer().playEffect(e.getPlayer().getLocation(), Effect.BLAZE_SHOOT, 100);
-			e.getPlayer().playEffect(e.getPlayer().getLocation(), Effect.MOBSPAWNER_FLAMES, 100);
-
+		if(e.getEntity() instanceof Player){
+			if(e.getCause().equals(EntityDamageEvent.DamageCause.FALL)){
+				e.setCancelled(true);
+				float x = (float) -1 + (float) (Math.random() * ((1 - -1) + 1));
+			    float y = (float) 0 + (float)(Math.random() * ((5 - 0) + 1));
+			    float z = (float) -1 + (float) (Math.random() * ((1 - -1) + 1));
+				p.setVelocity(new Vector(x,y,z));
+				p.playEffect(p.getLocation(), Effect.BLAZE_SHOOT, 100);
+				p.playEffect(p.getLocation(), Effect.MOBSPAWNER_FLAMES, 100);
 			}
 		}
-		
-		
 	}
-	
-	
+	}
 
 
 }
